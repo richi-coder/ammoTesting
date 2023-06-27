@@ -7,7 +7,7 @@ function Scene() {
     <>
       <OrbitControls />
       <Ground />
-      <Cube />
+      <Cube mass={1} position={[10,0,0]} dimensions={[1,1,1]} scale={1} quaternion={[0,0,0,1]} />
       <PerspectiveCamera makeDefault position={[100,100,100]} />
     </>
   )

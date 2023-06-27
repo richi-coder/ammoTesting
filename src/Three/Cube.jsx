@@ -4,6 +4,9 @@ import { createCube } from "../Ammo/createCube";
 
 function Cube({ mass, dimensions, position, quaternion, scale}) {
     const useAmmo = useContextAmmo();
+    const setAmmo = useAmmo.updateAmmoState;
+    const Ammo = useAmmo.AmmoState.Ammo;
+    const Universe = useAmmo.AmmoState.phyisicsUniverse;
 
     const cubeData = {
         mass,
@@ -14,13 +17,16 @@ function Cube({ mass, dimensions, position, quaternion, scale}) {
     }
 
     useEffect(() => {
-        createCube(useAmmo.AmmoState, cubeData)
-    }, [])
+        if(useAmmo.AmmoState.Ammo) {
+            const cubeCreated = createCube(Ammo, cubeData);
+            setAmmo({ phyisicsUniverse: Universe.addRigidBody(cubeCreated) })
+        }
+    }, [useAmmo.AmmoState.Ammo])
     
 
   return (
-    <mesh>
-        <boxGeometry />
+    <mesh position={position}>
+        <boxGeometry args={dimensions} />
         <meshBasicMaterial />
     </mesh>
   )
