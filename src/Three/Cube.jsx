@@ -1,15 +1,20 @@
 import { useEffect } from "react"
+import { useContextAmmo } from "../AmmoContext/AmmoContext"
+import { createCube } from "../Ammo/createCube";
 
-function Cube() {
-    const cubeDimensions = {
-        x: 1,
-        y: 1,
-        z: 1
+function Cube({ mass, dimensions, position, quaternion, scale}) {
+    const useAmmo = useContextAmmo();
+
+    const cubeData = {
+        mass,
+        dimensions,
+        position,
+        quaternion,
+        scale
     }
 
-
     useEffect(() => {
-        
+        createCube(useAmmo.AmmoState, cubeData)
     }, [])
     
 

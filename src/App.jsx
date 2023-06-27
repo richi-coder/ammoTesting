@@ -10,8 +10,8 @@ function App() {
 
   useEffect(() => {
     Ammo().then(Ammo => {
-      useAmmo.initAmmo(Ammo)
-      initPhysicsUniverse(Ammo)
+      const physicsUniverse = initPhysicsUniverse(Ammo)
+      useAmmo.updateAmmoState({ Ammo, physicsUniverse })
     })
   }, [])
   

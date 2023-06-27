@@ -8,15 +8,22 @@ export const useContextAmmo = () => {
 }
 
 function AmmoContext({ children }) {
-    const [AmmoState, setAmmoState] = useState(null)
+    const [AmmoState, setAmmoState] = useState({
+        Ammo: null,
+        physicsUniverse: null,
+        solids: {}
+    })
 
-    const initAmmo = (Ammo) => {
-        setAmmoState(Ammo)
+    const updateAmmoState = (props) => {
+        setAmmoState({
+            ...AmmoState,
+            ...props
+        })
     }
 
     const useAmmoData = {
-        Ammo: AmmoState,
-        initAmmo
+        AmmoState,
+        updateAmmoState
     }
 
 
