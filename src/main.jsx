@@ -2,13 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+// import Ammo from "ammojs3";
+import initPhysicsUniverse from "./Ammo/initPhysicsUniverse.js";
+import AmmoContext from "./AmmoContext/AmmoContext.jsx";
 
-import('ammojs3').then(AmmoStart)
+// Ammo().then(Ammo => AmmoStart(Ammo))
 
-function AmmoStart() {
+// function AmmoStart(Ammo) {
+//   initPhysicsUniverse(Ammo)
+    
+
     ReactDOM.createRoot(document.getElementById("root")).render(
-      <React.StrictMode>
+      <AmmoContext>
         <App />
-      </React.StrictMode>
+      </AmmoContext>
     );
-}
+// }
