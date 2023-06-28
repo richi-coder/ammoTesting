@@ -1,7 +1,6 @@
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import Ground from "./Ground"
 import Cube from "./Cube"
-import { useFrame } from "@react-three/fiber"
 import { useContextAmmo } from "../AmmoContext/AmmoContext"
 import { updatePhysicsUniverse } from "../Ammo/updatePhysicsUniverse"
 import { useEffect } from "react"
@@ -14,31 +13,35 @@ function Scene() {
   const tmpTransformation = useAmmo.AmmoState.tmpTransformation;
 
 
-  // useEffect(() => {
+  useEffect(() => {
     
-  // if (Ammo) {
+  if (Ammo) {
   
-  useFrame((state) => {
-    console.log(state, 'state');
-    if (Ammo) {
-      const delta = state.clock.getDelta()
-      console.log(bodies, 'test');
+  // useFrame((state) => {
+    const gameLoop = () => {
+    if (bodies.length > 0) {
+      // const delta = state.clock.getDelta()
+      const delta = 1 / 60
+      // console.log(bodies, 'test');
         
       
         // const delta = 0.5;
-        const result = updatePhysicsUniverse(physicsUniverse, bodies[0], tmpTransformation, delta)
-        // console.log(position, quaternion, 'watch');
+        const [ position, quaternion ] = updatePhysicsUniverse(physicsUniverse, bodies[0], tmpTransformation, delta)
+        console.log(position.x(), position.y(), 'watch');
       }
-  })
+      setTimeout(gameLoop, 16);
+    }
+    gameLoop()
+  // })
   
-//   }
-// }, [Ammo])
+  }
+}, [bodies[0]])
 
   return (
     <>
       <OrbitControls />
       <Ground />
-      <Cube mass={1} position={[10,0,0]} dimensions={[10,10,10]} scale={1} quaternion={[0,0,0,1]} />
+      <Cube mass={1} position={[0,10,0]} dimensions={[10,10,10]} scale={1} quaternion={[0,0,0,1]} />
       <PerspectiveCamera makeDefault position={[100,100,100]} />
     </>
   )
