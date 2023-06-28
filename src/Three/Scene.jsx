@@ -13,29 +13,29 @@ function Scene() {
   const tmpTransformation = useAmmo.AmmoState.tmpTransformation;
 
 
-  useEffect(() => {
+//   useEffect(() => {
     
-  if (Ammo) {
+//   if (Ammo) {
   
-  // useFrame((state) => {
-    const gameLoop = () => {
-    if (bodies.length > 0) {
-      // const delta = state.clock.getDelta()
-      const delta = 1 / 60
-      // console.log(bodies, 'test');
+//   // useFrame((state) => {
+//     const gameLoop = () => {
+//     if (bodies.length > 0) {
+//       // const delta = state.clock.getDelta()
+//       const delta = 1 / 60
+//       // console.log(bodies, 'test');
         
       
-        // const delta = 0.5;
-        const [ position, quaternion ] = updatePhysicsUniverse(physicsUniverse, bodies[0], tmpTransformation, delta)
-        console.log(position.x(), position.y(), 'watch');
-      }
-      setTimeout(gameLoop, 16);
-    }
-    gameLoop()
-  // })
+//         // const delta = 0.5;
+//         const [ position, quaternion ] = updatePhysicsUniverse(physicsUniverse, bodies[0], tmpTransformation, delta)
+//         // console.log(position.x(), position.y(), 'watch');
+//       }
+//       setTimeout(gameLoop, 16);
+//     }
+//     gameLoop()
+//   // })
   
-  }
-}, [bodies[0]])
+//   }
+// }, [bodies[0]])
 
   return (
     <>
