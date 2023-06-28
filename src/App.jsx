@@ -11,14 +11,14 @@ function App() {
   useEffect(() => {
     Ammo().then(Ammo => {
       const physicsUniverse = initPhysicsUniverse(Ammo)
-      useAmmo.updateAmmoState({ Ammo, physicsUniverse })
+      useAmmo.updateAmmoState({ Ammo, physicsUniverse, tmpTransformation: new Ammo.btTransform() })
     })
   }, [])
   
 
   
   return (
-    <Canvas>
+    <Canvas frameloop='demand'>
       <Scene />
     </Canvas>
   )

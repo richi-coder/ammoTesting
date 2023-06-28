@@ -11,7 +11,8 @@ function AmmoContext({ children }) {
     const [AmmoState, setAmmoState] = useState({
         Ammo: null,
         physicsUniverse: null,
-        solids: {}
+        bodies: [],
+        tmpTransformation: null
     })
 
     const updateAmmoState = (props) => {
