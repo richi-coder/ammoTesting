@@ -3,7 +3,6 @@ import Scene from './Three/Scene'
 import Ammo from "ammojs3";
 import { useEffect } from 'react';
 import { useContextAmmo } from './AmmoContext/AmmoContext';
-import initPhysicsUniverse from './Ammo/initPhysicsUniverse';
 import { AmmoBegin } from './Ammo/completeAmmo';
 
 function App() {
