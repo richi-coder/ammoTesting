@@ -1,4 +1,4 @@
-import Ammo from "ammojs3"
+import Ammo from 'ammojs3'
 import { Vector3 } from "three"
 
 export const AmmoBegin = (Ammo) => {
