@@ -46,12 +46,14 @@ import Ammo from 'ammojs3'
 			};
 
 			// - Functions -
-
+            
+            // THREE JS ************************************************* //
 			function initGraphics() {
 
 				container = document.getElementById( 'container' );
 				speedometer = document.getElementById( 'speedometer' );
 
+                
 				scene = new THREE.Scene();
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
@@ -59,12 +61,12 @@ import Ammo from 'ammojs3'
 				camera.position.y = 4.39;
 				camera.position.z = -35.11;
 				camera.lookAt( new THREE.Vector3( 0.33, -0.40, 0.85 ) );
-				
 
 				renderer = new THREE.WebGLRenderer({antialias:true});
 				renderer.setClearColor( 0xbfd1e5 );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
+
                 controls = new OrbitControls( camera, renderer.domElement );
 
 				var ambientLight = new THREE.AmbientLight( 0x404040 );
@@ -81,17 +83,12 @@ import Ammo from 'ammojs3'
 				container.innerHTML = "";
 
 				container.appendChild( renderer.domElement );
-
-				// stats = new Stats();
-				// stats.domElement.style.position = 'absolute';
-				// stats.domElement.style.top = '0px';
-				// container.appendChild( stats.domElement );
-
+				
 				window.addEventListener( 'resize', onWindowResize, false );
 				window.addEventListener( 'keydown', keydown);
 				window.addEventListener( 'keyup', keyup);
 			}
-
+            // CANVAS RESIZE ************************************************* //
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -100,7 +97,7 @@ import Ammo from 'ammojs3'
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
-
+            // AMMO JS WORLD ************************************************* //
 			function initPhysics() {
 
 				// Physics configuration
@@ -111,7 +108,7 @@ import Ammo from 'ammojs3'
 				physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
 				physicsWorld.setGravity( new Ammo.btVector3( 0, -9.82, 0 ) );
 			}
-
+            // LOOP ************************************************* //
 			function tick() {
 				requestAnimationFrame( tick );
 				var dt = clock.getDelta();
@@ -123,7 +120,7 @@ import Ammo from 'ammojs3'
 				time += dt;
 				// stats.update();
 			}
-
+            // CONTROLS ************************************************* //
 			function keyup(e) {
 				if(keysActions[e.code]) {
 					actions[keysActions[e.code]] = false;
@@ -140,7 +137,7 @@ import Ammo from 'ammojs3'
 					return false;
 				}
 			}
-
+            // AMMO BOX ************************************************* //
 			function createBox(pos, quat, w, l, h, mass, friction) {
 				var material = mass > 0 ? materialDynamic : materialStatic;
 				var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
@@ -189,7 +186,7 @@ import Ammo from 'ammojs3'
 					syncList.push(sync);
 				}
 			}
-
+            // AMMO WHEEL ************************************************* //
 			function createWheelMesh(radius, width) {
 				var t = new THREE.CylinderGeometry(radius, radius, width, 24, 1);
 				t.rotateZ(Math.PI / 2);
@@ -198,14 +195,14 @@ import Ammo from 'ammojs3'
 				scene.add(mesh);
 				return mesh;
 			}
-
+            // AMMO CHASSIS ************************************************* //
 			function createChassisMesh(w, l, h) {
 				var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
 				var mesh = new THREE.Mesh(shape, materialInteractive);
 				scene.add(mesh);
 				return mesh;
 			}
-
+            // AMMO VEHICLE ************************************************* //
 			function createVehicle(pos, quat) {
 
 				// Vehicle contants
@@ -370,7 +367,7 @@ import Ammo from 'ammojs3'
 
 				syncList.push(sync);
 			}
-
+            // AMMO BOXES ************************************************* //
 			function createObjects() {
 
 				createBox(new THREE.Vector3(0, -0.5, 0), ZERO_QUATERNION, 75, 1, 75, 0, 2);
