@@ -7,12 +7,13 @@ import { AmmoBegin } from './Ammo/completeAmmo';
 
 function App() {
   const useAmmo = useContextAmmo();
+  console.log('hey');
 
   useEffect(() => {
     Ammo().then(Ammo => {
+      console.log('amoo loaded');
       AmmoBegin(Ammo)
-      // const physicsUniverse = initPhysicsUniverse(Ammo)
-      // useAmmo.updateAmmoState({ Ammo, physicsUniverse, tmpTransformation: new Ammo.btTransform() })
+   
     })
   }, [])
   
