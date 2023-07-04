@@ -420,9 +420,10 @@ import Ammo from 'ammojs3'
                 let cameraPosition = positionToLook.clone()
                 wDir.add(new THREE.Vector3(0, 0.2, 0));
                 
-                let followPos = new THREE.Vector3(0,0,0);
+                let followPos = new THREE.Vector3(0,2,0);
                 followPos.setFromMatrixPosition(follow.matrixWorld)
                 camera.position.copy(followPos);
+                camera.position.y = 3
                 camera.lookAt(chassisMesh.position);
 			}
 
