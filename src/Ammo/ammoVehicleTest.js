@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Ammo from 'ammojs3'		
 
 
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
         Ammo().then(function(Ammo) {
 
 			// Detects webgl
@@ -15,6 +17,13 @@ import Ammo from 'ammojs3'
 			var DISABLE_DEACTIVATION = 4;
 			var TRANSFORM_AUX = new Ammo.btTransform();
 			var ZERO_QUATERNION = new THREE.Quaternion(0, 0, 0, 1);
+
+            // First chassis
+            var chassisMesh;
+            // Camera first Person
+            
+            let quaternionToFollow = new THREE.Quaternion(0, 0, 0, 0);
+            let follow;
 
 			// Graphics variables
 			var container, speedometer;
@@ -56,11 +65,13 @@ import Ammo from 'ammojs3'
                 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 100 );
 				camera.position.x = -4.84;
 				camera.position.y = 4.39;
 				camera.position.z = -35.11;
 				camera.lookAt( new THREE.Vector3( 0.33, -0.40, 0.85 ) );
+
+                
 
 				renderer = new THREE.WebGLRenderer({antialias:true});
 				renderer.setClearColor( 0xbfd1e5 );
@@ -108,18 +119,7 @@ import Ammo from 'ammojs3'
 				physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
 				physicsWorld.setGravity( new Ammo.btVector3( 0, -9.82, 0 ) );
 			}
-            // LOOP ************************************************* //
-			function tick() {
-				requestAnimationFrame( tick );
-				var dt = clock.getDelta();
-				for (var i = 0; i < syncList.length; i++)
-					syncList[i](dt);
-				physicsWorld.stepSimulation( dt, 10 );
-				controls.update( dt );
-				renderer.render( scene, camera );
-				time += dt;
-				// stats.update();
-			}
+            
             // CONTROLS ************************************************* //
 			function keyup(e) {
 				if(keysActions[e.code]) {
@@ -205,7 +205,7 @@ import Ammo from 'ammojs3'
             // AMMO VEHICLE ************************************************* //
 			function createVehicle(pos, quat) {
 
-				// Vehicle contants
+				// Vehicle constants
 
 				var chassisWidth = 1.8;
 				var chassisHeight = .6;
@@ -248,7 +248,13 @@ import Ammo from 'ammojs3'
 				var body = new Ammo.btRigidBody(new Ammo.btRigidBodyConstructionInfo(massVehicle, motionState, geometry, localInertia));
 				body.setActivationState(DISABLE_DEACTIVATION);
 				physicsWorld.addRigidBody(body);
-				var chassisMesh = createChassisMesh(chassisWidth, chassisHeight, chassisLength);
+				chassisMesh = createChassisMesh(chassisWidth, chassisHeight, chassisLength);
+                // var material = materialStatic;
+				// var shape = new THREE.BoxGeometry(.1, .1, .1, 1, 1, 1);
+                follow = new THREE.Object3D();
+                follow.position.y = 2;
+                follow.position.z = -15;
+                chassisMesh.add(follow)
 
 				// Raycast Vehicle
 				var engineForce = 0;
@@ -367,15 +373,17 @@ import Ammo from 'ammojs3'
 
 				syncList.push(sync);
 			}
-            // AMMO BOXES ************************************************* //
+            // AMMO OBJECTS ************************************************* //
 			function createObjects() {
-
+                // Ground
 				createBox(new THREE.Vector3(0, -0.5, 0), ZERO_QUATERNION, 75, 1, 75, 0, 2);
 
+                // Ramp
 				var quaternion = new THREE.Quaternion(0, 0, 0, 1);
 				quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 18);
 				createBox(new THREE.Vector3(0, -1.5, 0), quaternion, 8, 4, 10, 0);
 
+                // Boxes wall
 				var size = .75;
 				var nw = 8;
 				var nh = 6;
@@ -383,7 +391,39 @@ import Ammo from 'ammojs3'
 					for (var i = 0; i < nh; i++)
 						createBox(new THREE.Vector3(size * j - (size * (nw - 1)) / 2, size * i, 10), ZERO_QUATERNION, size, size, size, 10);
 
+                // Vehicle
 				createVehicle(new THREE.Vector3(0, 4, -20), ZERO_QUATERNION);
+			}
+            // LOOP ************************************************* //
+			function tick() {
+				requestAnimationFrame( tick );
+				var dt = clock.getDelta();
+				for (var i = 0; i < syncList.length; i++)
+					syncList[i](dt);
+				physicsWorld.stepSimulation( dt, 10 );
+				// controls.update( dt );
+				renderer.render( scene, camera );
+				time += dt;
+				// stats.update();
+                
+                // third person camera test
+                let positionToLook = new THREE.Vector3(0,0,0);
+                positionToLook.setFromMatrixPosition(chassisMesh.matrixWorld);
+
+                quaternionToFollow.setFromRotationMatrix(chassisMesh.matrixWorld);
+
+                let wDir = new THREE.Vector3(0,0,-1);
+                wDir.applyQuaternion(quaternionToFollow);
+                wDir.normalize();
+
+                // let cameraPosition = positionToLook.clone().add(wDir.clone().multiplyScalar(1).add(new THREE.Vector3(0, 2, -8)));
+                let cameraPosition = positionToLook.clone()
+                wDir.add(new THREE.Vector3(0, 0.2, 0));
+                
+                let followPos = new THREE.Vector3(0,0,0);
+                followPos.setFromMatrixPosition(follow.matrixWorld)
+                camera.position.copy(followPos);
+                camera.lookAt(chassisMesh.position);
 			}
 
 			// - Init -

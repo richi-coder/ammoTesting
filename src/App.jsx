@@ -4,16 +4,16 @@ import Ammo from "ammojs3";
 import { useEffect } from 'react';
 import { useContextAmmo } from './AmmoContext/AmmoContext';
 import { AmmoBegin } from './Ammo/completeAmmo';
+import initPhysicsUniverse from './Ammo/initPhysicsUniverse';
 
 function App() {
   const useAmmo = useContextAmmo();
-  console.log('hey');
 
   useEffect(() => {
     Ammo().then(Ammo => {
-      console.log('amoo loaded');
       AmmoBegin(Ammo)
-   
+      const physicsUniverse = initPhysicsUniverse(Ammo)
+      useAmmo.updateAmmoState({ Ammo, physicsUniverse, tmpTransformation: new Ammo.btTransform() })
     })
   }, [])
   
