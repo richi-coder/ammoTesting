@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Ammo from 'ammojs3'		
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
@@ -65,7 +66,7 @@ import Ammo from 'ammojs3'
                 
 				scene = new THREE.Scene();
 
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 100 );
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 1000 );
 				camera.position.x = -4.84;
 				camera.position.y = 4.39;
 				camera.position.z = -35.11;
@@ -88,8 +89,8 @@ import Ammo from 'ammojs3'
 				scene.add( dirLight );
 
 				materialDynamic = new THREE.MeshPhongMaterial( { color:0xfca400 } );
-				materialStatic = new THREE.MeshPhongMaterial( { color:0x999999 } );
-				materialInteractive=new THREE.MeshPhongMaterial( { color:0x990000 } );
+				materialStatic = new THREE.MeshPhongMaterial( { color: 'a9a9a9' } );
+				materialInteractive= new THREE.MeshPhongMaterial( { color:0x990000 } );
 
 				container.innerHTML = "";
 
@@ -137,6 +138,16 @@ import Ammo from 'ammojs3'
 					return false;
 				}
 			}
+
+			function createGraphicsTrack() {
+				const loader = new GLTFLoader();
+				loader.load( 'src/assets/lowpoly_racetrack/scene.gltf', function ( gltf ) {
+					scene.add( gltf.scene );
+				}, undefined, function ( error ) {
+					console.error( error );
+				} );
+			}
+
             // AMMO BOX ************************************************* //
 			function createBox(pos, quat, w, l, h, mass, friction) {
 				var material = mass > 0 ? materialDynamic : materialStatic;
@@ -195,12 +206,21 @@ import Ammo from 'ammojs3'
 				scene.add(mesh);
 				return mesh;
 			}
-            // AMMO CHASSIS ************************************************* //
+            // THREEjs CHASSIS ************************************************* //
 			function createChassisMesh(w, l, h) {
-				var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
-				var mesh = new THREE.Mesh(shape, materialInteractive);
-				scene.add(mesh);
-				return mesh;
+				// var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
+				// var mesh = new THREE.Mesh(shape, materialInteractive);
+				const loader = new GLTFLoader();const shape = new THREE.Object3D()
+				loader.load( 'src/assets/toyota_starlet/scene.gltf', function ( gltf ) {
+					shape.add(gltf.scene)
+					gltf.scene.position.set(0,-0.75,0)
+					shape.position.set(0,0,0)
+					shape.scale.set(1.5,1.5,1.5)
+					scene.add( shape );
+				}, undefined, function ( error ) {
+					console.error( error );
+				} );
+				return shape
 			}
             // AMMO VEHICLE ************************************************* //
 			function createVehicle(pos, quat) {
@@ -224,7 +244,7 @@ import Ammo from 'ammojs3'
 				var wheelRadiusFront = .35;
 				var wheelWidthFront = .2;
 
-				var friction = 1000;
+				var friction = 1.5;
 				var suspensionStiffness = 20.0;
 				var suspensionDamping = 2.3;
 				var suspensionCompression = 4.4;
@@ -234,7 +254,7 @@ import Ammo from 'ammojs3'
 				var steeringIncrement = .04;
 				var steeringClamp = .5;
 				var maxEngineForce = 2000;
-				var maxBreakingForce = 100;
+				var maxBreakingForce = 500;
 
 				// Chassis
 				var geometry = new Ammo.btBoxShape(new Ammo.btVector3(chassisWidth * .5, chassisHeight * .5, chassisLength * .5));
@@ -253,7 +273,7 @@ import Ammo from 'ammojs3'
 				// var shape = new THREE.BoxGeometry(.1, .1, .1, 1, 1, 1);
                 follow = new THREE.Object3D();
                 follow.position.y = 2;
-                follow.position.z = -15;
+                follow.position.z = -5;
                 chassisMesh.add(follow)
 
 				// Raycast Vehicle
@@ -376,7 +396,10 @@ import Ammo from 'ammojs3'
             // AMMO OBJECTS ************************************************* //
 			function createObjects() {
                 // Ground
-				createBox(new THREE.Vector3(0, -0.5, 0), ZERO_QUATERNION, 75, 1, 75, 0, 2);
+				createBox(new THREE.Vector3(0, -0.2, 0), ZERO_QUATERNION, 500, 1, 500, 0, 2);
+
+				// Graphics track
+				createGraphicsTrack()
 
                 // Ramp
 				var quaternion = new THREE.Quaternion(0, 0, 0, 1);
