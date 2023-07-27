@@ -254,7 +254,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 				var steeringIncrement = .04;
 				var steeringClamp = .5;
 				var maxEngineForce = 2000;
-				var maxBreakingForce = 500;
+				var maxBreakingForce = 200;
 
 				// Chassis
 				var geometry = new Ammo.btBoxShape(new Ammo.btVector3(chassisWidth * .5, chassisHeight * .5, chassisLength * .5));
