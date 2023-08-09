@@ -90,7 +90,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 				materialDynamic = new THREE.MeshPhongMaterial( { color:0xfca400 } );
 				materialStatic = new THREE.MeshPhongMaterial( { color: 'a9a9a9' } );
-				materialInteractive= new THREE.MeshPhongMaterial( { color:0x990000 } );
+				materialInteractive= new THREE.MeshPhongMaterial( { color:0x000000 } );
 
 				container.innerHTML = "";
 
@@ -210,12 +210,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 			function createChassisMesh(w, l, h) {
 				// var shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
 				// var mesh = new THREE.Mesh(shape, materialInteractive);
-				const loader = new GLTFLoader();const shape = new THREE.Object3D()
-				loader.load( 'src/assets/toyota_starlet/scene.gltf', function ( gltf ) {
+				const loader = new GLTFLoader();
+				const shape = new THREE.Object3D()
+				loader.load( 'src/assets/fsaeCar/fsaeproto.glb', function ( gltf ) {
 					shape.add(gltf.scene)
-					gltf.scene.position.set(0,-0.75,0)
-					shape.position.set(0,0,0)
-					shape.scale.set(1.5,1.5,1.5)
+					gltf.scene.position.set(0,-0.3,1.5)
+					gltf.scene.rotation.set(Math.PI/2,0,0)
+					gltf.scene.scale.set(0.0011,0.0011,0.0011)
 					scene.add( shape );
 				}, undefined, function ( error ) {
 					console.error( error );
@@ -229,32 +230,32 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 				var chassisWidth = 1.8;
 				var chassisHeight = .6;
-				var chassisLength = 4;
-				var massVehicle = 800;
+				var chassisLength = 2;
+				var massVehicle = 200;
 
-				var wheelAxisPositionBack = -1;
-				var wheelRadiusBack = .4;
-				var wheelWidthBack = .3;
-				var wheelHalfTrackBack = 1;
+				var wheelAxisPositionBack = -0.77;
+				var wheelRadiusBack = .2;
+				var wheelWidthBack = .21;
+				var wheelHalfTrackBack = 0.67;
 				var wheelAxisHeightBack = .3;
 
-				var wheelAxisFrontPosition = 1.7;
-				var wheelHalfTrackFront = 1;
+				var wheelAxisFrontPosition = 0.77;
+				var wheelHalfTrackFront = 0.67;
 				var wheelAxisHeightFront = .3;
-				var wheelRadiusFront = .35;
-				var wheelWidthFront = .2;
+				var wheelRadiusFront = .2;
+				var wheelWidthFront = .21;
 
 				var friction = 1.5;
-				var suspensionStiffness = 20.0;
-				var suspensionDamping = 2.3;
+				var suspensionStiffness = 40.0;
+				var suspensionDamping = 0.3;
 				var suspensionCompression = 4.4;
 				var suspensionRestLength = 0.6;
 				var rollInfluence = 0.2;
 
 				var steeringIncrement = .04;
 				var steeringClamp = .5;
-				var maxEngineForce = 2000;
-				var maxBreakingForce = 200;
+				var maxEngineForce = 500;
+				var maxBreakingForce = 50;
 
 				// Chassis
 				var geometry = new Ammo.btBoxShape(new Ammo.btVector3(chassisWidth * .5, chassisHeight * .5, chassisLength * .5));
@@ -272,8 +273,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
                 // var material = materialStatic;
 				// var shape = new THREE.BoxGeometry(.1, .1, .1, 1, 1, 1);
                 follow = new THREE.Object3D();
-                follow.position.y = 2;
-                follow.position.z = -5;
+                follow.position.z = -3;
+				follow.position.y = 1.5;
                 chassisMesh.add(follow)
 
 				// Raycast Vehicle
@@ -446,7 +447,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
                 let followPos = new THREE.Vector3(0,2,0);
                 followPos.setFromMatrixPosition(follow.matrixWorld)
                 camera.position.copy(followPos);
-                camera.position.y = 3
                 camera.lookAt(chassisMesh.position);
 			}
 
